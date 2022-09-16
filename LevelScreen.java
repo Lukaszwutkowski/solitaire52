@@ -1,10 +1,14 @@
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 import java.util.ArrayList;
 
 public class LevelScreen extends BaseScreen
 {
     private ArrayList<Pile> pileList;
+    private Label messageLabel;
+
     public void initialize() 
     {        
         BaseActor background = new BaseActor(0, 0, mainStage);
@@ -41,10 +45,24 @@ public class LevelScreen extends BaseScreen
                 card.setDraggable(false);
             }
         }
+
+        messageLabel = new Label("...", BaseGame.labelStyle);
+        messageLabel.setColor(Color.CYAN);
+        uiTable.add(messageLabel).expandX().expandY().bottom().pad(50);
+        messageLabel.setVisible(false);
     }
 
     public void update(float dt)
     {
-       
+       boolean complete = true;
+       for (Pile pile : pileList){
+           if (pile.getSize() < 13){
+               complete = false;
+           }
+       }
+       if (complete){
+           messageLabel.setText("You win!");
+           messageLabel.setVisible(true);
+       }
     }
 }
