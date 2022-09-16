@@ -48,4 +48,20 @@ public class Card extends DragAndDropActor{
         super.act(dt);
         boundToWorld();
     }
+
+    @Override
+    public void onDrop() {
+        if (hasDropTarget()){
+            Pile pile = (Pile)getDropTarget();
+            Card topCard = pile.getTopCard();
+
+            if (this.getRankValue() == topCard.getRankValue() + 1 && this.getSuitValue() == topCard.getSuitValue()){
+                moveToActor(pile);
+                pile.addCard(this);
+            }
+            else {
+                moveToStart();
+            }
+        }
+    }
 }
