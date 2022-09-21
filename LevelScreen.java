@@ -1,3 +1,7 @@
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.backends.lwjgl.audio.Mp3;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -8,12 +12,31 @@ public class LevelScreen extends BaseScreen
 {
     private ArrayList<Pile> pileList;
     private Label messageLabel;
+    private Label scoreLabel;
+    private int score;
+
+    private Music backgroundMusic;
+    private Sound cardPositionSound;
+    private float timer;
 
     public void initialize() 
     {        
         BaseActor background = new BaseActor(0, 0, mainStage);
         background.loadTexture("assets/felt.jpg");
         BaseActor.setWorldBounds(background);
+        scoreLabel = new Label(Integer.toString(score), BaseGame.labelStyle);
+        scoreLabel.setColor(Color.GOLD);
+        uiTable.pad(10);
+        uiTable.add(scoreLabel);
+        uiTable.row();
+
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/Prelude-and-Action.mp3"));
+        cardPositionSound = Gdx.audio.newSound(Gdx.files.internal("assets/sparkle.mp3"));
+
+        backgroundMusic.setLooping(true);
+        backgroundMusic.setVolume(1.00f);
+        backgroundMusic.play();
+
 
         for (int r = 0; r < Card.rankNames.length; r++){
             for (int s = 0; s < Card.suitNames.length; s++){
@@ -41,6 +64,7 @@ public class LevelScreen extends BaseScreen
                 Pile pile = pileList.get(card.getSuitValue());
                 card.toFront();
                 card.moveToActor(pile);
+                cardPositionSound.play();
                 pile.addCard(card);
                 card.setDraggable(false);
             }
@@ -64,5 +88,6 @@ public class LevelScreen extends BaseScreen
            messageLabel.setText("You win!");
            messageLabel.setVisible(true);
        }
+
     }
 }
